@@ -83,8 +83,17 @@ header {
 }
 
 .intuit-logo {
-    color: var(--intuit-blue);
-    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 24px;
+    width: auto;
+}
+
+body.dark-mode .logo-img {
+    filter: brightness(0) invert(1);
 }
 
 .theme-toggle {
