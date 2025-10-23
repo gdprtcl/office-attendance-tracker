@@ -43,9 +43,12 @@ function saveData() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(attendanceData));
 }
 
-// Get date string in YYYY-MM-DD format
+// Get date string in YYYY-MM-DD format (timezone-safe)
 function getDateString(date) {
-    return date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
 
 // Check if date is a weekend
@@ -146,9 +149,11 @@ function cycleType(currentType) {
 function handleDayClick(dateString, dayElement) {
     // Parse date in local timezone by adding time component
     const date = new Date(dateString + 'T12:00:00');
+    console.log('Clicked date:', dateString, 'Day of week:', date.getDay(), ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][date.getDay()]);
     
     // Don't allow clicking on weekends
     if (isWeekend(date)) {
+        console.log('Blocked as weekend');
         return;
     }
     
@@ -258,8 +263,10 @@ function renderCalendar() {
         // Add click handler for all dates (but handleDayClick will prevent weekend clicks)
         if (!isWeekend(date)) {
             dayElement.addEventListener('click', () => handleDayClick(dateString, dayElement));
+            dayElement.style.cursor = 'pointer';
         } else {
             dayElement.style.cursor = 'not-allowed';
+            console.log('Rendering weekend:', dateString, 'Day:', date.getDay());
         }
         
         calendar.appendChild(dayElement);
