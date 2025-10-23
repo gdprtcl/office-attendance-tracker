@@ -1,4 +1,4 @@
-const CACHE_NAME = 'attendance-tracker-v1';
+const CACHE_NAME = 'attendance-tracker-v3';
 const urlsToCache = [
   '/office-attendance-tracker/',
   '/office-attendance-tracker/index.html',
@@ -8,21 +8,33 @@ const urlsToCache = [
 
 // Install service worker and cache files
 self.addEventListener('install', event => {
+  self.skipWaiting(); // Activate immediately
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(urlsToCache))
   );
 });
 
-// Serve cached content when offline
+// Network first, fallback to cache (ensures you always get latest files)
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => response || fetch(event.request))
+    fetch(event.request)
+      .then(response => {
+        // Cache the new version
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, responseClone);
+        });
+        return response;
+      })
+      .catch(() => {
+        // If network fails, use cache
+        return caches.match(event.request);
+      })
   );
 });
 
-// Clean up old caches
+// Clean up old caches and take control immediately
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -33,7 +45,7 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });
 
