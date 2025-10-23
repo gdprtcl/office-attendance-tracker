@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Track your office attendance and meet your 3-day goal">
+    <meta name="theme-color" content="#0077C5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Attendance">
     <title>Office Attendance Tracker</title>
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -32,6 +38,12 @@
             </div>
         </div>
 
+        <div id="aiSuggestions" class="ai-suggestions"></div>
+
+        <div id="achievementToast" class="achievement-toast"></div>
+
+        <div id="badges" class="badges-container"></div>
+
         <div class="legend">
             <div class="legend-item">
                 <span class="legend-dot badge-in"></span>
@@ -52,6 +64,7 @@
         </div>
 
         <div class="actions">
+            <button class="btn-secondary" id="notificationBtn">🔔 Enable Alerts</button>
             <button class="reset-btn" id="resetBtn">Reset Data</button>
         </div>
     </div>

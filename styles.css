@@ -245,8 +245,147 @@ h1 {
     background: rgba(43, 95, 127, 0.15);
 }
 
+.ai-suggestions {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    display: none;
+}
+
+.ai-suggestions.show {
+    display: block;
+    animation: slideIn 0.3s ease;
+}
+
+.ai-suggestions h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ai-suggestions ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ai-suggestions li {
+    font-size: 13px;
+    padding: 6px 0;
+    padding-left: 20px;
+    position: relative;
+}
+
+.ai-suggestions li:before {
+    content: "💡";
+    position: absolute;
+    left: 0;
+}
+
+.badges-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    min-height: 60px;
+}
+
+.badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    border: 2px solid #e8e8e8;
+    min-width: 70px;
+    animation: badgePop 0.4s ease;
+}
+
+.badge-icon {
+    font-size: 28px;
+}
+
+.badge-name {
+    font-size: 10px;
+    font-weight: 600;
+    color: #393A3D;
+    text-align: center;
+}
+
+.badge.locked {
+    opacity: 0.3;
+    filter: grayscale(100%);
+}
+
+.achievement-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #00A83D 0%, #00D958 100%);
+    color: white;
+    padding: 16px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    max-width: 300px;
+}
+
+.achievement-toast.show {
+    transform: translateX(0);
+}
+
+.achievement-toast h4 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+}
+
+.achievement-toast p {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
 .actions {
     text-align: center;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.btn-secondary {
+    padding: 10px 20px;
+    background: #0077C5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background: #005a9c;
+}
+
+.btn-secondary:active {
+    transform: scale(0.97);
+}
+
+.btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .reset-btn {
@@ -268,6 +407,31 @@ h1 {
 
 .reset-btn:active {
     transform: scale(0.97);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes badgePop {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 /* Mobile optimizations */
@@ -292,6 +456,21 @@ h1 {
     .metrics-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 8px;
+    }
+
+    .achievement-toast {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .btn-secondary, .reset-btn {
+        width: 100%;
     }
 
     .metric-card {

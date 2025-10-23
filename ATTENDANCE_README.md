@@ -1,15 +1,49 @@
 # Office Attendance Tracker
 
-A simple, beautiful app to track your office attendance and calculate your on-site average based on Intuit's 3-day office policy.
+A smart, beautiful Progressive Web App to track your office attendance and calculate your on-site average based on Intuit's 3-day office policy.
 
-## Features
+## ✨ Features
 
+### Core Tracking
 - **Visual Calendar**: 8 weeks historical view + 2 weeks future planning
 - **Real-time Metrics**: Badge-ins, eligible days, minimum expected, and average days per week
-- **4-Week Rolling Calculation**: Automatically calculates your attendance based on the previous 4-week period (ending on the most recent Saturday)
+- **4-Week Rolling Calculation**: Automatically calculates based on the previous 4-week period (ending on the most recent Saturday)
 - **Easy Tracking**: Click any day to mark as Badge-in, Leave, or Holiday
-- **Mobile Friendly**: Works perfectly on phones and tablets
-- **Private**: All data is stored locally in your browser
+
+### 📱 Mobile App (PWA)
+- **Install to Home Screen**: Works like a native app on iOS and Android
+- **Offline Support**: Access your data without internet
+- **Fast & Responsive**: Optimized for mobile devices
+- No app store needed - just add to home screen!
+
+### 🤖 AI-Powered Insights
+- **Smart Suggestions**: Get personalized recommendations based on your attendance patterns
+- **Trend Analysis**: Understand your attendance habits
+- **Predictive Alerts**: Know how many more days you need to meet your goal
+- **Context-Aware Tips**: Different suggestions based on day of week and your progress
+
+### 🔔 Smart Alerts
+- **Browser Notifications**: Get reminded about your attendance goals
+- **Weekly Reminders**: Monday morning check-ins
+- **Goal Tracking**: Alerts when you're falling behind
+- Enable with one click!
+
+### 🏆 Achievement Badges
+- **First Day** 🎯 - Mark your first office day
+- **Week Warrior** 💪 - 5 office days in a week
+- **Consistent** ⭐ - Badge in 3 days/week for 4 weeks
+- **Overachiever** 🚀 - Average 4+ days/week
+- **Week Streak** 🔥 - 7 day streak
+- **Double Streak** 🔥🔥 - 14 day streak
+- **20 Days** 🏆 - Badge in 20 times
+- **50 Days** 💎 - Badge in 50 times
+- **Early Bird** 🌅 - Badge in on Monday 4 weeks in a row
+- **Perfect Month** 👑 - Meet goal every week for 4 weeks
+
+### 🔒 Privacy First
+- **Local Storage**: All data stays in your browser
+- **No Server**: No data leaves your device
+- **No Login Required**: Start tracking immediately
 
 ## How to Use
 
