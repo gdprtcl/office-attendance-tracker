@@ -144,7 +144,8 @@ function cycleType(currentType) {
 
 // Handle day click
 function handleDayClick(dateString, dayElement) {
-    const date = new Date(dateString);
+    // Parse date in local timezone by adding time component
+    const date = new Date(dateString + 'T12:00:00');
     
     // Don't allow clicking on weekends
     if (isWeekend(date)) {
@@ -742,7 +743,7 @@ function generateAIPredictions() {
     let totalBadgeIns = 0;
     Object.keys(attendanceData).forEach(dateString => {
         if (attendanceData[dateString] === DAY_TYPES.BADGE_IN) {
-            const date = new Date(dateString);
+            const date = new Date(dateString + 'T12:00:00');
             const day = date.getDay();
             if (day >= 1 && day <= 5) { // Weekdays only
                 dayCount[day]++;
