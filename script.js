@@ -412,9 +412,12 @@ function generateAISuggestions() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
+    // Check if the 4-week calculation period has ended (ends on most recent Saturday)
+    const calculationPeriodEnd = dates[dates.length - 1];
+    const isPeriodComplete = calculationPeriodEnd < today;
+    
     let badgeIns = 0;
     let eligibleDays = 0;
-    let weekdaysRemaining = 0;
     
     dates.forEach(date => {
         if (date > today) return;
@@ -428,16 +431,6 @@ function generateAISuggestions() {
         }
     });
     
-    // Count remaining weekdays in current week
-    const endOfWeek = new Date(today);
-    endOfWeek.setDate(today.getDate() + (6 - today.getDay()));
-    
-    let current = new Date(today);
-    while (current <= endOfWeek) {
-        if (!isWeekend(current)) weekdaysRemaining++;
-        current.setDate(current.getDate() + 1);
-    }
-    
     const minExpected = Math.round(eligibleDays * 0.6);
     const avgDays = minExpected > 0 ? (badgeIns / minExpected) * 3 : 0;
     const daysNeeded = Math.max(0, Math.ceil(minExpected - badgeIns));
@@ -448,21 +441,38 @@ function generateAISuggestions() {
     if (avgDays >= 3.0) {
         suggestions.push('🎉 Great job! You\'re meeting your attendance goal!');
         if (badgeIns > minExpected) {
-            suggestions.push(`You have ${badgeIns - minExpected} extra office day${badgeIns - minExpected > 1 ? 's' : ''} banked.`);
+            suggestions.push(`You exceeded expectations with ${badgeIns - minExpected} extra office day${badgeIns - minExpected > 1 ? 's' : ''}!`);
         }
     } else if (daysNeeded > 0) {
-        suggestions.push(`You need ${daysNeeded} more office day${daysNeeded > 1 ? 's' : ''} to reach your 3.0 goal.`);
-        
-        if (weekdaysRemaining > 0) {
-            suggestions.push(`Consider coming in ${Math.min(daysNeeded, weekdaysRemaining)} day${Math.min(daysNeeded, weekdaysRemaining) > 1 ? 's' : ''} this week.`);
+        if (isPeriodComplete) {
+            // Period has ended - use past tense
+            suggestions.push(`You needed ${daysNeeded} more office day${daysNeeded > 1 ? 's' : ''} to reach the 3.0 goal for that period.`);
+            suggestions.push('Focus on the current week to improve your next 4-week average!');
+        } else {
+            // Period is ongoing - use present/future tense
+            suggestions.push(`You need ${daysNeeded} more office day${daysNeeded > 1 ? 's' : ''} to reach your 3.0 goal.`);
+            
+            // Calculate remaining weekdays in the calculation period
+            let weekdaysRemaining = 0;
+            let current = new Date(today);
+            while (current <= calculationPeriodEnd) {
+                if (!isWeekend(current)) weekdaysRemaining++;
+                current.setDate(current.getDate() + 1);
+            }
+            
+            if (weekdaysRemaining > 0 && daysNeeded <= weekdaysRemaining) {
+                suggestions.push(`You have ${weekdaysRemaining} weekday${weekdaysRemaining > 1 ? 's' : ''} left to make it!`);
+            } else if (daysNeeded > weekdaysRemaining && weekdaysRemaining > 0) {
+                suggestions.push(`Only ${weekdaysRemaining} weekday${weekdaysRemaining > 1 ? 's' : ''} left in this period - do your best!`);
+            }
         }
         
-        // Pattern analysis
+        // General day-of-week tips (always relevant)
         const dayOfWeek = today.getDay();
         if (dayOfWeek === 1) { // Monday
-            suggestions.push('Start the week strong! Mark your office days for this week.');
+            suggestions.push('Start the week strong! Plan your office days for this week.');
         } else if (dayOfWeek === 5) { // Friday
-            suggestions.push('Plan your office days for next week to stay on track.');
+            suggestions.push('Plan ahead for next week to stay on track.');
         }
     }
     
@@ -518,10 +528,8 @@ const BADGES = [
     { id: 'week-warrior', icon: '💪', name: 'Week Warrior', description: '5 office days in a week', condition: () => checkWeekStreak(5) },
     { id: 'consistent', icon: '⭐', name: 'Consistent', description: 'Badge in 3 days/week for 4 weeks', condition: () => calculateAverageDays() >= 3.0 },
     { id: 'overachiever', icon: '🚀', name: 'Overachiever', description: 'Average 4+ days/week', condition: () => calculateAverageDays() >= 4.0 },
-    { id: 'streak-7', icon: '🔥', name: 'Week Streak', description: '7 day streak', condition: () => getCurrentStreak() >= 7 },
-    { id: 'streak-14', icon: '🔥🔥', name: 'Double Streak', description: '14 day streak', condition: () => getCurrentStreak() >= 14 },
-    { id: 'milestone-20', icon: '🏆', name: '20 Days', description: 'Badge in 20 times', condition: () => getTotalBadgeIns() >= 20 },
-    { id: 'milestone-50', icon: '💎', name: '50 Days', description: 'Badge in 50 times', condition: () => getTotalBadgeIns() >= 50 },
+    { id: 'milestone-20', icon: '🏆', name: '20 Days', description: 'Badge in 20 times total', condition: () => getTotalBadgeIns() >= 20 },
+    { id: 'milestone-50', icon: '💎', name: '50 Days', description: 'Badge in 50 times total', condition: () => getTotalBadgeIns() >= 50 },
     { id: 'early-bird', icon: '🌅', name: 'Early Bird', description: 'Badge in on Monday 4 weeks in a row', condition: () => checkMondayStreak() },
     { id: 'perfect-month', icon: '👑', name: 'Perfect Month', description: 'Meet goal every week for 4 weeks', condition: () => checkPerfectMonth() }
 ];
@@ -625,9 +633,10 @@ function renderBadges() {
     container.innerHTML = BADGES.map(badge => {
         const earned = earnedBadges.includes(badge.id);
         return `
-            <div class="badge ${earned ? '' : 'locked'}" title="${badge.description}">
+            <div class="badge ${earned ? '' : 'locked'}">
                 <div class="badge-icon">${badge.icon}</div>
                 <div class="badge-name">${badge.name}</div>
+                <div class="badge-description">${badge.description}</div>
             </div>
         `;
     }).join('');
