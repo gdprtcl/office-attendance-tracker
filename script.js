@@ -84,7 +84,9 @@ function getRolling8Weeks() {
     const currentDate = new Date(startDate);
     
     while (currentDate <= endDate) {
-        dates.push(new Date(currentDate));
+        const dateToAdd = new Date(currentDate);
+        dateToAdd.setHours(12, 0, 0, 0); // Set to noon to avoid timezone issues
+        dates.push(dateToAdd);
         currentDate.setDate(currentDate.getDate() + 1);
     }
     
@@ -166,12 +168,15 @@ function handleDayClick(dateString, dayElement) {
     // Update data
     if (newType === DAY_TYPES.UNMARKED) {
         delete attendanceData[dateString];
+        console.log('Deleted from storage:', dateString);
     } else {
         attendanceData[dateString] = newType;
+        console.log('Saved to storage:', dateString, '=', newType);
     }
     
     // Save and update UI
     saveData();
+    console.log('Full attendanceData:', JSON.stringify(attendanceData, null, 2));
     updateDayElement(dayElement, dateString);
     calculateMetrics();
 }
@@ -262,11 +267,13 @@ function renderCalendar() {
         
         // Add click handler for all dates (but handleDayClick will prevent weekend clicks)
         if (!isWeekend(date)) {
-            dayElement.addEventListener('click', () => handleDayClick(dateString, dayElement));
+            dayElement.addEventListener('click', () => {
+                console.log('Calendar render - dateString passed to handler:', dateString, 'Original date object:', date, 'Day of week:', date.getDay());
+                handleDayClick(dateString, dayElement);
+            });
             dayElement.style.cursor = 'pointer';
         } else {
             dayElement.style.cursor = 'not-allowed';
-            console.log('Rendering weekend:', dateString, 'Day:', date.getDay());
         }
         
         calendar.appendChild(dayElement);
