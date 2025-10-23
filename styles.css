@@ -1,0 +1,386 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Avenir Next', 'Segoe UI', sans-serif;
+    background: #f5f5f5;
+    min-height: 100vh;
+    padding: 16px;
+    color: #393A3D;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e8e8e8;
+    padding-bottom: 16px;
+}
+
+h1 {
+    font-size: 22px;
+    color: #0077C5;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.calculation-period {
+    color: #6B6C72;
+    font-size: 12px;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.metric-card {
+    background: #f8f9fa;
+    padding: 12px 8px;
+    border-radius: 6px;
+    text-align: center;
+    border: 1px solid #e8e8e8;
+}
+
+.metric-card.highlight {
+    background: #0077C5;
+    color: white;
+    border-color: #0077C5;
+}
+
+.metric-value {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.metric-label {
+    font-size: 10px;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-weight: 600;
+}
+
+.legend {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #393A3D;
+}
+
+.legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+}
+
+.legend-dot.badge-in {
+    background: #A8E6CF;
+}
+
+.legend-dot.leave {
+    background: #FFE5A0;
+}
+
+.legend-dot.holiday {
+    background: #A8D8EA;
+}
+
+.calendar-container {
+    margin-bottom: 16px;
+}
+
+#calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.calendar-header {
+    text-align: center;
+    font-weight: 600;
+    font-size: 10px;
+    color: #6B6C72;
+    padding: 6px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.month-year-header {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: #0077C5;
+    padding: 12px 0 8px 0;
+    margin-top: 8px;
+    border-top: 1px solid #e8e8e8;
+}
+
+.month-year-header:first-of-type {
+    margin-top: 0;
+    border-top: none;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid #e8e8e8;
+    background: white;
+    transition: all 0.15s ease;
+    padding: 4px;
+    position: relative;
+}
+
+.calendar-day:hover {
+    transform: scale(1.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    z-index: 10;
+}
+
+.calendar-day.future {
+    opacity: 0.5;
+    border-style: dashed;
+}
+
+.day-number {
+    font-weight: 600;
+    font-size: 14px;
+    color: #393A3D;
+}
+
+.today-label {
+    font-size: 7px;
+    font-weight: 700;
+    color: #0077C5;
+    text-transform: uppercase;
+    margin-top: 1px;
+    background: rgba(0, 119, 197, 0.1);
+    padding: 1px 4px;
+    border-radius: 2px;
+    letter-spacing: 0.3px;
+}
+
+.calendar-day.weekend {
+    background: #f5f5f5;
+    border-color: #e0e0e0;
+}
+
+.calendar-day.weekend .day-number {
+    color: #9B9B9B;
+}
+
+.calendar-day.badge-in {
+    background: #A8E6CF;
+    border-color: #90D4B0;
+}
+
+.calendar-day.badge-in .day-number {
+    color: #2D6A4F;
+}
+
+.calendar-day.badge-in .today-label {
+    color: #2D6A4F;
+    background: rgba(45, 106, 79, 0.15);
+}
+
+.calendar-day.leave {
+    background: #FFE5A0;
+    border-color: #E6CC8A;
+}
+
+.calendar-day.leave .day-number {
+    color: #8B6914;
+}
+
+.calendar-day.leave .today-label {
+    color: #8B6914;
+    background: rgba(139, 105, 20, 0.15);
+}
+
+.calendar-day.holiday {
+    background: #A8D8EA;
+    border-color: #8FC0D4;
+}
+
+.calendar-day.holiday .day-number {
+    color: #2B5F7F;
+}
+
+.calendar-day.holiday .today-label {
+    color: #2B5F7F;
+    background: rgba(43, 95, 127, 0.15);
+}
+
+.actions {
+    text-align: center;
+}
+
+.reset-btn {
+    padding: 10px 20px;
+    background: white;
+    color: #D0021B;
+    border: 1px solid #D0021B;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.reset-btn:hover {
+    background: #D0021B;
+    color: white;
+}
+
+.reset-btn:active {
+    transform: scale(0.97);
+}
+
+/* Mobile optimizations */
+@media (max-width: 600px) {
+    body {
+        padding: 12px;
+    }
+
+    .container {
+        padding: 16px;
+        border-radius: 6px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .calculation-period {
+        font-size: 11px;
+    }
+
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .metric-card {
+        padding: 10px 6px;
+    }
+
+    .metric-value {
+        font-size: 20px;
+    }
+
+    .metric-label {
+        font-size: 9px;
+    }
+
+    #calendar {
+        gap: 3px;
+    }
+
+    .calendar-header {
+        font-size: 9px;
+        padding: 4px 0;
+    }
+
+    .month-year-header {
+        font-size: 13px;
+        padding: 10px 0 6px 0;
+    }
+
+    .day-number {
+        font-size: 12px;
+    }
+
+    .today-label {
+        font-size: 6px;
+        padding: 1px 3px;
+    }
+
+    .legend {
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .legend-item {
+        font-size: 11px;
+    }
+
+    .legend-dot {
+        width: 12px;
+        height: 12px;
+    }
+}
+
+@media (max-width: 400px) {
+    body {
+        padding: 8px;
+    }
+
+    .container {
+        padding: 12px;
+    }
+
+    h1 {
+        font-size: 18px;
+    }
+
+    .calculation-period {
+        font-size: 10px;
+    }
+
+    .calendar-day {
+        padding: 2px;
+    }
+
+    .calendar-header {
+        font-size: 8px;
+        padding: 3px 0;
+    }
+
+    .month-year-header {
+        font-size: 12px;
+        padding: 8px 0 4px 0;
+    }
+
+    .day-number {
+        font-size: 11px;
+    }
+
+    .today-label {
+        font-size: 6px;
+        padding: 0px 2px;
+    }
+}

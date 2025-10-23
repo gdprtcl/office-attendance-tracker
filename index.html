@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Office Attendance Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Office Attendance Tracker</h1>
+            <p class="calculation-period" id="calculationPeriod">Calculation Period: Loading...</p>
+        </header>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value" id="badgeIns">0</div>
+                <div class="metric-label">Badge-ins</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="eligibleDays">0</div>
+                <div class="metric-label">Eligible Days</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="minExpected">0</div>
+                <div class="metric-label">Min Expected</div>
+            </div>
+            <div class="metric-card highlight">
+                <div class="metric-value" id="avgDays">0.0</div>
+                <div class="metric-label">Avg Days/Week</div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <span class="legend-dot badge-in"></span>
+                <span>Badge-in</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot leave"></span>
+                <span>Leave</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot holiday"></span>
+                <span>Holiday</span>
+            </div>
+        </div>
+
+        <div class="calendar-container">
+            <div id="calendar"></div>
+        </div>
+
+        <div class="actions">
+            <button class="reset-btn" id="resetBtn">Reset Data</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

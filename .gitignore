@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Other files in this directory
+*.md
+!ATTENDANCE_README.md
+*.csv
+
