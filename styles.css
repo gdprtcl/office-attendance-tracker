@@ -4,39 +4,122 @@
     box-sizing: border-box;
 }
 
+:root {
+    /* Intuit Light Mode Colors */
+    --intuit-blue: #0077C5;
+    --intuit-blue-dark: #005a9c;
+    --intuit-green: #00A83D;
+    --intuit-green-light: #A8E6CF;
+    --intuit-orange: #F5A623;
+    --intuit-orange-light: #FFE5A0;
+    --intuit-sky: #A8D8EA;
+    --intuit-red: #D0021B;
+    
+    --bg-primary: #f5f5f5;
+    --bg-secondary: white;
+    --bg-tertiary: #f8f9fa;
+    --bg-card: white;
+    
+    --text-primary: #393A3D;
+    --text-secondary: #6B6C72;
+    --text-tertiary: #9B9B9B;
+    
+    --border-color: #e8e8e8;
+    --border-light: #e0e0e0;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+body.dark-mode {
+    /* Intuit Dark Mode Colors */
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #242424;
+    --bg-tertiary: #2a2a2a;
+    --bg-card: #2d2d2d;
+    
+    --text-primary: #f0f0f0;
+    --text-secondary: #b8b8b8;
+    --text-tertiary: #808080;
+    
+    --border-color: #404040;
+    --border-light: #4a4a4a;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
 body {
     font-family: 'Avenir Next', 'Segoe UI', sans-serif;
-    background: #f5f5f5;
+    background: var(--bg-primary);
     min-height: 100vh;
     padding: 16px;
-    color: #393A3D;
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .container {
     max-width: 600px;
     margin: 0 auto;
-    background: white;
+    background: var(--bg-secondary);
     border-radius: 8px;
     padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 header {
     text-align: center;
     margin-bottom: 20px;
-    border-bottom: 1px solid #e8e8e8;
+    border-bottom: 1px solid var(--border-color);
     padding-bottom: 16px;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.intuit-logo {
+    color: var(--intuit-blue);
+    font-weight: bold;
+}
+
+.theme-toggle {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 18px;
+}
+
+.theme-toggle:hover {
+    background: var(--intuit-blue);
+    border-color: var(--intuit-blue);
+    transform: scale(1.05);
+}
+
+.theme-toggle:hover .theme-icon {
+    filter: brightness(0) invert(1);
 }
 
 h1 {
     font-size: 22px;
-    color: #0077C5;
+    color: var(--intuit-blue);
     font-weight: 600;
     margin-bottom: 6px;
 }
 
 .calculation-period {
-    color: #6B6C72;
+    color: var(--text-secondary);
     font-size: 12px;
     margin-top: 4px;
     font-weight: 500;
@@ -50,17 +133,18 @@ h1 {
 }
 
 .metric-card {
-    background: #f8f9fa;
+    background: var(--bg-tertiary);
     padding: 12px 8px;
     border-radius: 6px;
     text-align: center;
-    border: 1px solid #e8e8e8;
+    border: 1px solid var(--border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .metric-card.highlight {
-    background: #0077C5;
+    background: var(--intuit-blue);
     color: white;
-    border-color: #0077C5;
+    border-color: var(--intuit-blue);
 }
 
 .metric-value {
@@ -83,8 +167,9 @@ h1 {
     gap: 16px;
     margin-bottom: 16px;
     padding: 10px;
-    background: #f8f9fa;
+    background: var(--bg-tertiary);
     border-radius: 6px;
+    transition: background-color 0.3s ease;
 }
 
 .legend-item {
@@ -93,7 +178,8 @@ h1 {
     gap: 6px;
     font-size: 12px;
     font-weight: 500;
-    color: #393A3D;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
 }
 
 .legend-dot {
@@ -103,15 +189,15 @@ h1 {
 }
 
 .legend-dot.badge-in {
-    background: #A8E6CF;
+    background: var(--intuit-green-light);
 }
 
 .legend-dot.leave {
-    background: #FFE5A0;
+    background: var(--intuit-orange-light);
 }
 
 .legend-dot.holiday {
-    background: #A8D8EA;
+    background: var(--intuit-sky);
 }
 
 .calendar-container {
@@ -128,10 +214,11 @@ h1 {
     text-align: center;
     font-weight: 600;
     font-size: 10px;
-    color: #6B6C72;
+    color: var(--text-secondary);
     padding: 6px 0;
     text-transform: uppercase;
     letter-spacing: 0.3px;
+    transition: color 0.3s ease;
 }
 
 .month-year-header {
@@ -139,10 +226,11 @@ h1 {
     text-align: center;
     font-weight: 600;
     font-size: 14px;
-    color: #0077C5;
+    color: var(--intuit-blue);
     padding: 12px 0 8px 0;
     margin-top: 8px;
-    border-top: 1px solid #e8e8e8;
+    border-top: 1px solid var(--border-color);
+    transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 .month-year-header:first-of-type {
@@ -158,8 +246,8 @@ h1 {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border: 1px solid #e8e8e8;
-    background: white;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
     transition: all 0.15s ease;
     padding: 4px;
     position: relative;
@@ -167,7 +255,7 @@ h1 {
 
 .calendar-day:hover {
     transform: scale(1.08);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--shadow-md);
     z-index: 10;
 }
 
@@ -179,13 +267,14 @@ h1 {
 .day-number {
     font-weight: 600;
     font-size: 14px;
-    color: #393A3D;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
 }
 
 .today-label {
     font-size: 7px;
     font-weight: 700;
-    color: #0077C5;
+    color: var(--intuit-blue);
     text-transform: uppercase;
     margin-top: 1px;
     background: rgba(0, 119, 197, 0.1);
@@ -195,16 +284,16 @@ h1 {
 }
 
 .calendar-day.weekend {
-    background: #f5f5f5;
-    border-color: #e0e0e0;
+    background: var(--bg-tertiary);
+    border-color: var(--border-light);
 }
 
 .calendar-day.weekend .day-number {
-    color: #9B9B9B;
+    color: var(--text-tertiary);
 }
 
 .calendar-day.badge-in {
-    background: #A8E6CF;
+    background: var(--intuit-green-light);
     border-color: #90D4B0;
 }
 
@@ -218,7 +307,7 @@ h1 {
 }
 
 .calendar-day.leave {
-    background: #FFE5A0;
+    background: var(--intuit-orange-light);
     border-color: #E6CC8A;
 }
 
@@ -232,7 +321,7 @@ h1 {
 }
 
 .calendar-day.holiday {
-    background: #A8D8EA;
+    background: var(--intuit-sky);
     border-color: #8FC0D4;
 }
 
@@ -246,12 +335,53 @@ h1 {
 }
 
 .ai-suggestions {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--intuit-blue) 0%, var(--intuit-blue-dark) 100%);
     color: white;
     padding: 16px;
     border-radius: 8px;
     margin-bottom: 16px;
     display: none;
+}
+
+.ai-predictions {
+    background: linear-gradient(135deg, #00A83D 0%, #008830 100%);
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    display: none;
+}
+
+.ai-predictions.show {
+    display: block;
+    animation: slideIn 0.3s ease;
+}
+
+.ai-predictions h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ai-predictions ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ai-predictions li {
+    font-size: 13px;
+    padding: 6px 0;
+    padding-left: 20px;
+    position: relative;
+}
+
+.ai-predictions li:before {
+    content: "📈";
+    position: absolute;
+    left: 0;
 }
 
 .ai-suggestions.show {
@@ -289,15 +419,17 @@ h1 {
 .badges-section {
     margin-top: 24px;
     padding-top: 20px;
-    border-top: 1px solid #e8e8e8;
+    border-top: 1px solid var(--border-color);
+    transition: border-color 0.3s ease;
 }
 
 .badges-title {
     font-size: 16px;
     font-weight: 600;
-    color: #0077C5;
+    color: var(--intuit-blue);
     margin-bottom: 12px;
     text-align: center;
+    transition: color 0.3s ease;
 }
 
 .badges-container {
@@ -313,16 +445,16 @@ h1 {
     align-items: center;
     gap: 6px;
     padding: 16px 12px;
-    background: white;
+    background: var(--bg-card);
     border-radius: 8px;
-    border: 2px solid #e8e8e8;
+    border: 2px solid var(--border-color);
     animation: badgePop 0.4s ease;
-    transition: all 0.2s;
+    transition: all 0.3s;
 }
 
 .badge:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
 }
 
 .badge-icon {
@@ -332,16 +464,18 @@ h1 {
 .badge-name {
     font-size: 12px;
     font-weight: 600;
-    color: #393A3D;
+    color: var(--text-primary);
     text-align: center;
     margin-bottom: 2px;
+    transition: color 0.3s ease;
 }
 
 .badge-description {
     font-size: 10px;
-    color: #6B6C72;
+    color: var(--text-secondary);
     text-align: center;
     line-height: 1.3;
+    transition: color 0.3s ease;
 }
 
 .badge.locked {
@@ -393,7 +527,7 @@ h1 {
 
 .btn-secondary {
     padding: 10px 20px;
-    background: #0077C5;
+    background: var(--intuit-blue);
     color: white;
     border: none;
     border-radius: 6px;
@@ -404,7 +538,7 @@ h1 {
 }
 
 .btn-secondary:hover {
-    background: #005a9c;
+    background: var(--intuit-blue-dark);
 }
 
 .btn-secondary:active {
@@ -418,9 +552,9 @@ h1 {
 
 .reset-btn {
     padding: 10px 20px;
-    background: white;
-    color: #D0021B;
-    border: 1px solid #D0021B;
+    background: var(--bg-card);
+    color: var(--intuit-red);
+    border: 1px solid var(--intuit-red);
     border-radius: 6px;
     font-size: 12px;
     font-weight: 600;
@@ -429,7 +563,7 @@ h1 {
 }
 
 .reset-btn:hover {
-    background: #D0021B;
+    background: var(--intuit-red);
     color: white;
 }
 

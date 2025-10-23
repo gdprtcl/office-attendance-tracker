@@ -15,6 +15,7 @@ let attendanceData = {};
 // Initialize the app
 function init() {
     loadData();
+    loadTheme();
     renderCalendar();
     calculateMetrics();
     setupEventListeners();
@@ -22,6 +23,7 @@ function init() {
     renderBadges();
     checkForNewAchievements();
     generateAISuggestions();
+    generateAIPredictions();
 }
 
 // Load data from localStorage
@@ -88,7 +90,7 @@ function getRolling8Weeks() {
 
 // Get the most recent 4-week period for calculations (ending on previous Saturday)
 function getRecent4Weeks() {
-    const today = new Date();
+        const today = new Date();
     today.setHours(0, 0, 0, 0);
     
     // Find the most recent Saturday (not including today if today is Saturday, go to previous Saturday)
@@ -112,7 +114,7 @@ function getRecent4Weeks() {
     
     while (currentDate <= endDate) {
         dates.push(new Date(currentDate));
-        currentDate.setDate(currentDate.getDate() + 1);
+                currentDate.setDate(currentDate.getDate() + 1);
     }
     
     return dates;
@@ -278,7 +280,7 @@ function calculateMetrics() {
         if (date > today) {
             return;
         }
-        
+
         const dateString = getDateString(date);
         const type = attendanceData[dateString] || DAY_TYPES.UNMARKED;
         
@@ -331,10 +333,35 @@ function setupEventListeners() {
             calculateMetrics();
             renderBadges();
             generateAISuggestions();
+            generateAIPredictions();
         }
     });
     
     document.getElementById('notificationBtn').addEventListener('click', requestNotificationPermission);
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+}
+
+// ==========================================
+// Dark Mode / Theme Toggle
+// ==========================================
+
+function loadTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        updateThemeIcon(true);
+    }
+}
+
+function toggleTheme() {
+    const isDark = document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    updateThemeIcon(isDark);
+}
+
+function updateThemeIcon(isDark) {
+    const icon = document.querySelector('.theme-icon');
+    icon.textContent = isDark ? '☀️' : '🌙';
 }
 
 // ==========================================
@@ -642,12 +669,106 @@ function renderBadges() {
     }).join('');
 }
 
+// ==========================================
+// AI Predictions Engine
+// ==========================================
+
+function generateAIPredictions() {
+    const dates = getRecent4Weeks();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Get historical data
+    let badgeIns = 0;
+    let eligibleDays = 0;
+    let weekdaysInPeriod = 0;
+    
+    dates.forEach(date => {
+        if (date > today) return;
+        
+        const dateString = getDateString(date);
+        const type = attendanceData[dateString] || DAY_TYPES.UNMARKED;
+        
+        if (type === DAY_TYPES.BADGE_IN) badgeIns++;
+        if (!isWeekend(date)) weekdaysInPeriod++;
+        if (!isWeekend(date) && type !== DAY_TYPES.LEAVE && type !== DAY_TYPES.HOLIDAY) {
+            eligibleDays++;
+        }
+    });
+    
+    if (badgeIns === 0 || weekdaysInPeriod === 0) {
+        document.getElementById('aiPredictions').classList.remove('show');
+        return;
+    }
+    
+    // Calculate current rate
+    const currentRate = badgeIns / weekdaysInPeriod;
+    const minExpected = Math.round(eligibleDays * 0.6);
+    const currentAvg = minExpected > 0 ? (badgeIns / minExpected) * 3 : 0;
+    
+    const predictions = [];
+    
+    // Prediction 1: Next month forecast
+    const nextMonthWeekdays = 20; // Approximate
+    const predictedNextMonth = Math.round(currentRate * nextMonthWeekdays);
+    predictions.push(`Based on your pattern, you'll likely badge in ${predictedNextMonth} days next month.`);
+    
+    // Prediction 2: Trend analysis
+    if (currentAvg >= 3.5) {
+        predictions.push('You\'re trending above the requirement - great momentum! 📈');
+    } else if (currentAvg >= 3.0) {
+        predictions.push('You\'re maintaining a steady pace. Keep it up!');
+    } else if (currentAvg >= 2.5) {
+        predictions.push('Slightly below target. A few more days this month will get you on track.');
+    } else {
+        predictions.push('Consider increasing your office frequency to meet the 3.0 goal.');
+    }
+    
+    // Prediction 3: Best day patterns
+    const dayCount = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0};
+    Object.keys(attendanceData).forEach(dateString => {
+        if (attendanceData[dateString] === DAY_TYPES.BADGE_IN) {
+            const date = new Date(dateString);
+            dayCount[date.getDay()]++;
+        }
+    });
+    
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const maxDay = Object.keys(dayCount).reduce((a, b) => dayCount[a] > dayCount[b] ? a : b);
+    if (dayCount[maxDay] > 2) {
+        predictions.push(`You typically go in on ${dayNames[maxDay]}s - consistency is key!`);
+    }
+    
+    // Prediction 4: Quarter end forecast
+    const daysUntilQuarterEnd = 30; // Simplified
+    const predictedQuarterEnd = Math.round(currentRate * daysUntilQuarterEnd);
+    if (currentAvg < 3.0) {
+        const daysNeeded = Math.ceil((3.0 / currentAvg) * badgeIns) - badgeIns;
+        if (daysNeeded > 0 && daysNeeded <= 10) {
+            predictions.push(`Add ${daysNeeded} more office days in the next month to reach 3.0 average.`);
+        }
+    }
+    
+    // Display predictions
+    const container = document.getElementById('aiPredictions');
+    if (predictions.length > 0) {
+        container.innerHTML = `
+            <h3>🔮 AI Predictions</h3>
+            <ul>${predictions.map(p => `<li>${p}</li>`).join('')}</ul>
+        `;
+        container.classList.add('show');
+    } else {
+        container.classList.remove('show');
+    }
+}
+
 // Override the existing calculateMetrics to trigger new features
 const originalCalculateMetrics = calculateMetrics;
 calculateMetrics = function() {
     originalCalculateMetrics();
     checkForNewAchievements();
     generateAISuggestions();
+    generateAIPredictions();
     renderBadges();
 };
 

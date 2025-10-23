@@ -15,6 +15,16 @@
 <body>
     <div class="container">
         <header>
+            <div class="header-top">
+                <div class="intuit-logo">
+                    <svg width="80" height="24" viewBox="0 0 80 24" fill="currentColor">
+                        <text x="0" y="18" font-family="Arial, sans-serif" font-weight="bold" font-size="16">intuit</text>
+                    </svg>
+                </div>
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
             <h1>Office Attendance Tracker</h1>
             <p class="calculation-period" id="calculationPeriod">Calculation Period: Loading...</p>
         </header>
@@ -39,6 +49,8 @@
         </div>
 
         <div id="aiSuggestions" class="ai-suggestions"></div>
+
+        <div id="aiPredictions" class="ai-predictions"></div>
 
         <div id="achievementToast" class="achievement-toast"></div>
 
