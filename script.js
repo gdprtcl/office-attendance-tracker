@@ -22,7 +22,7 @@ function init() {
     registerServiceWorker();
     renderBadges();
     checkForNewAchievements();
-    generateAISuggestions();
+    generateAIInsights();
     generateAIPredictions();
 }
 
@@ -144,6 +144,13 @@ function cycleType(currentType) {
 
 // Handle day click
 function handleDayClick(dateString, dayElement) {
+    const date = new Date(dateString);
+    
+    // Don't allow clicking on weekends
+    if (isWeekend(date)) {
+        return;
+    }
+    
     // Get current type
     const currentType = attendanceData[dateString] || DAY_TYPES.UNMARKED;
     
@@ -247,8 +254,12 @@ function renderCalendar() {
         // Update based on stored data
         updateDayElement(dayElement, dateString);
         
-        // Add click handler for all dates
-        dayElement.addEventListener('click', () => handleDayClick(dateString, dayElement));
+        // Add click handler for all dates (but handleDayClick will prevent weekend clicks)
+        if (!isWeekend(date)) {
+            dayElement.addEventListener('click', () => handleDayClick(dateString, dayElement));
+        } else {
+            dayElement.style.cursor = 'not-allowed';
+        }
         
         calendar.appendChild(dayElement);
     });
@@ -332,7 +343,7 @@ function setupEventListeners() {
             renderCalendar();
             calculateMetrics();
             renderBadges();
-            generateAISuggestions();
+            generateAIInsights();
             generateAIPredictions();
         }
     });
@@ -431,10 +442,10 @@ function scheduleWeeklyReminder() {
 }
 
 // ==========================================
-// AI Suggestions Engine
+// AI Insights Engine (What's happening NOW)
 // ==========================================
 
-function generateAISuggestions() {
+function generateAIInsights() {
     const dates = getRecent4Weeks();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -511,11 +522,12 @@ function generateAISuggestions() {
         }
     }
     
-    // Display suggestions
-    const container = document.getElementById('aiSuggestions');
+    // Display insights
+    const container = document.getElementById('aiInsights');
     if (suggestions.length > 0) {
         container.innerHTML = `
-            <h3>🤖 AI Insights</h3>
+            <h3>💡 AI Insights</h3>
+            <p>Current status and actionable advice for this 4-week period</p>
             <ul>${suggestions.map(s => `<li>${s}</li>`).join('')}</ul>
         `;
         container.classList.add('show');
@@ -670,7 +682,7 @@ function renderBadges() {
 }
 
 // ==========================================
-// AI Predictions Engine
+// AI Predictions Engine (What's COMING in the future)
 // ==========================================
 
 function generateAIPredictions() {
@@ -711,41 +723,44 @@ function generateAIPredictions() {
     // Prediction 1: Next month forecast
     const nextMonthWeekdays = 20; // Approximate
     const predictedNextMonth = Math.round(currentRate * nextMonthWeekdays);
-    predictions.push(`Based on your pattern, you'll likely badge in ${predictedNextMonth} days next month.`);
+    predictions.push(`If you maintain this pace, you'll badge in ~${predictedNextMonth} days next month.`);
     
     // Prediction 2: Trend analysis
     if (currentAvg >= 3.5) {
-        predictions.push('You\'re trending above the requirement - great momentum! 📈');
+        predictions.push('Your trajectory is strong - you\'ll likely exceed 3.0 consistently! 📈');
     } else if (currentAvg >= 3.0) {
-        predictions.push('You\'re maintaining a steady pace. Keep it up!');
+        predictions.push('At this rate, you\'ll stay on track to meet the 3.0 goal.');
     } else if (currentAvg >= 2.5) {
-        predictions.push('Slightly below target. A few more days this month will get you on track.');
+        const daysNeeded = Math.ceil((3.0 / currentAvg) * badgeIns) - badgeIns;
+        predictions.push(`Increase by ${daysNeeded} more days per period to reach 3.0.`);
     } else {
-        predictions.push('Consider increasing your office frequency to meet the 3.0 goal.');
+        predictions.push('Significantly increase office visits to meet future 3.0 goals.');
     }
     
-    // Prediction 3: Best day patterns
-    const dayCount = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0};
+    // Prediction 3: Pattern analysis (only show if we have enough data and a clear pattern)
+    const dayCount = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}; // Mon-Fri only
+    let totalBadgeIns = 0;
     Object.keys(attendanceData).forEach(dateString => {
         if (attendanceData[dateString] === DAY_TYPES.BADGE_IN) {
             const date = new Date(dateString);
-            dayCount[date.getDay()]++;
+            const day = date.getDay();
+            if (day >= 1 && day <= 5) { // Weekdays only
+                dayCount[day]++;
+                totalBadgeIns++;
+            }
         }
     });
     
-    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const maxDay = Object.keys(dayCount).reduce((a, b) => dayCount[a] > dayCount[b] ? a : b);
-    if (dayCount[maxDay] > 2) {
-        predictions.push(`You typically go in on ${dayNames[maxDay]}s - consistency is key!`);
-    }
-    
-    // Prediction 4: Quarter end forecast
-    const daysUntilQuarterEnd = 30; // Simplified
-    const predictedQuarterEnd = Math.round(currentRate * daysUntilQuarterEnd);
-    if (currentAvg < 3.0) {
-        const daysNeeded = Math.ceil((3.0 / currentAvg) * badgeIns) - badgeIns;
-        if (daysNeeded > 0 && daysNeeded <= 10) {
-            predictions.push(`Add ${daysNeeded} more office days in the next month to reach 3.0 average.`);
+    if (totalBadgeIns >= 5) { // Only show if we have enough data
+        const dayNames = {1: 'Monday', 2: 'Tuesday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday'};
+        const sortedDays = Object.keys(dayCount).sort((a, b) => dayCount[b] - dayCount[a]);
+        const topDay = sortedDays[0];
+        const topDayCount = dayCount[topDay];
+        const topDayPercent = Math.round((topDayCount / totalBadgeIns) * 100);
+        
+        // Only show if there's a clear pattern (>30% of days are on one specific day)
+        if (topDayPercent > 30) {
+            predictions.push(`${topDayPercent}% of your office days are ${dayNames[topDay]}s - maintain this consistency!`);
         }
     }
     
@@ -754,6 +769,7 @@ function generateAIPredictions() {
     if (predictions.length > 0) {
         container.innerHTML = `
             <h3>🔮 AI Predictions</h3>
+            <p>Future forecasts based on your current behavior patterns</p>
             <ul>${predictions.map(p => `<li>${p}</li>`).join('')}</ul>
         `;
         container.classList.add('show');
@@ -767,7 +783,7 @@ const originalCalculateMetrics = calculateMetrics;
 calculateMetrics = function() {
     originalCalculateMetrics();
     checkForNewAchievements();
-    generateAISuggestions();
+    generateAIInsights();
     generateAIPredictions();
     renderBadges();
 };
