@@ -1,6 +1,7 @@
 {
   "name": "Office Attendance Tracker",
   "short_name": "Attendance",
+  "version": "3.0",
   "description": "Track your office attendance and meet your 3-day goal",
   "start_url": "/office-attendance-tracker/",
   "display": "standalone",
