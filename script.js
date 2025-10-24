@@ -253,6 +253,17 @@ function renderCalendar() {
             dayElement.classList.add('weekend');
         }
         
+        // Debug for Oct 24
+        if (date.getDate() === 24 && date.getMonth() === 9) { // October is month 9
+            console.log('Oct 24 debug:', {
+                date: date,
+                dateString: dateString,
+                dayOfWeek: date.getDay(),
+                isWeekend: isWeekend(date),
+                fullDate: date.toString()
+            });
+        }
+        
         // Add day number
         const dayNumber = document.createElement('div');
         dayNumber.className = 'day-number';
