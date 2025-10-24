@@ -59,8 +59,16 @@ function isWeekend(date) {
 
 // Get 8 weeks past + 2 weeks future, starting from the most recent Sunday
 function getRolling8Weeks() {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    // Get today in IST timezone
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+    const istTime = new Date(now.getTime() + istOffset);
+    const todayYear = istTime.getUTCFullYear();
+    const todayMonth = istTime.getUTCMonth();
+    const todayDate = istTime.getUTCDate();
+    
+    // Create today's date at noon local time
+    const today = new Date(todayYear, todayMonth, todayDate, 12, 0, 0, 0);
     
     // Find the Saturday 2 weeks from now for end date
     const endDate = new Date(today);
