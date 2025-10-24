@@ -278,12 +278,13 @@ function renderCalendar() {
             todayLabel.className = 'today-label';
             todayLabel.textContent = 'Today';
             dayElement.appendChild(todayLabel);
-            console.log('Today label added for:', dateString);
+            console.log('✅ Today label added for:', dateString, 'Classes:', dayElement.className);
         } else {
             // Mark future dates (but not today)
             const checkDate = new Date(todayYear, todayMonth, todayDate, 12, 0, 0, 0);
             if (date > checkDate) {
                 dayElement.classList.add('future');
+                console.log('🔮 Future date:', dateString);
             }
         }
         
