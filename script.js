@@ -218,8 +218,6 @@ function renderCalendar() {
     const todayMonth = istTime.getUTCMonth();
     const todayDate = istTime.getUTCDate();
     
-    console.log('Today in IST:', todayYear, todayMonth + 1, todayDate);
-    
     // Add day headers (Sun, Mon, Tue, etc.)
     const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     dayHeaders.forEach(day => {
@@ -292,7 +290,6 @@ function renderCalendar() {
         // Add click handler for all dates (but handleDayClick will prevent weekend clicks)
         if (!isWeekend(date)) {
             dayElement.addEventListener('click', () => {
-                console.log('Calendar render - dateString passed to handler:', dateString, 'Original date object:', date, 'Day of week:', date.getDay());
                 handleDayClick(dateString, dayElement);
             });
             dayElement.style.cursor = 'pointer';
@@ -301,16 +298,6 @@ function renderCalendar() {
         }
         
         calendar.appendChild(dayElement);
-        
-        // Debug today's final classes AFTER adding to DOM
-        if (isToday) {
-            console.log('✅ Today final state:', {
-                dateString: dateString,
-                className: dayElement.className,
-                opacity: window.getComputedStyle(dayElement).opacity,
-                color: window.getComputedStyle(dayElement.querySelector('.day-number')).color
-            });
-        }
     });
 }
 
