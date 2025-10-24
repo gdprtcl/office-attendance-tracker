@@ -278,13 +278,11 @@ function renderCalendar() {
             todayLabel.className = 'today-label';
             todayLabel.textContent = 'Today';
             dayElement.appendChild(todayLabel);
-            console.log('✅ Today label added for:', dateString, 'Classes:', dayElement.className);
         } else {
             // Mark future dates (but not today)
             const checkDate = new Date(todayYear, todayMonth, todayDate, 12, 0, 0, 0);
             if (date > checkDate) {
                 dayElement.classList.add('future');
-                console.log('🔮 Future date:', dateString);
             }
         }
         
@@ -303,6 +301,16 @@ function renderCalendar() {
         }
         
         calendar.appendChild(dayElement);
+        
+        // Debug today's final classes AFTER adding to DOM
+        if (isToday) {
+            console.log('✅ Today final state:', {
+                dateString: dateString,
+                className: dayElement.className,
+                opacity: window.getComputedStyle(dayElement).opacity,
+                color: window.getComputedStyle(dayElement.querySelector('.day-number')).color
+            });
+        }
     });
 }
 
