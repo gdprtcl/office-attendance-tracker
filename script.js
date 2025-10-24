@@ -279,12 +279,12 @@ function renderCalendar() {
             todayLabel.textContent = 'Today';
             dayElement.appendChild(todayLabel);
             console.log('Today label added for:', dateString);
-        }
-        
-        // Mark future dates
-        const checkDate = new Date(todayYear, todayMonth, todayDate);
-        if (date > checkDate) {
-            dayElement.classList.add('future');
+        } else {
+            // Mark future dates (but not today)
+            const checkDate = new Date(todayYear, todayMonth, todayDate, 12, 0, 0, 0);
+            if (date > checkDate) {
+                dayElement.classList.add('future');
+            }
         }
         
         // Update based on stored data
