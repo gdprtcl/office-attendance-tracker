@@ -280,16 +280,9 @@ h1 {
     transition: color 0.3s ease;
 }
 
-.today-label {
-    font-size: 7px;
-    font-weight: 700;
-    color: var(--intuit-blue);
-    text-transform: uppercase;
-    margin-top: 2px;
-    background: rgba(0, 119, 197, 0.15);
-    padding: 2px 4px;
-    border-radius: 3px;
-    letter-spacing: 0.3px;
+.calendar-day.today {
+    border: 3px solid var(--intuit-blue);
+    box-shadow: 0 0 0 1px var(--intuit-blue);
 }
 
 .calendar-day.weekend {
@@ -310,11 +303,6 @@ h1 {
     color: #2D6A4F;
 }
 
-.calendar-day.badge-in .today-label {
-    color: #2D6A4F;
-    background: rgba(45, 106, 79, 0.15);
-}
-
 .calendar-day.leave {
     background: var(--intuit-orange-light);
     border-color: #E6CC8A;
@@ -324,11 +312,6 @@ h1 {
     color: #8B6914;
 }
 
-.calendar-day.leave .today-label {
-    color: #8B6914;
-    background: rgba(139, 105, 20, 0.15);
-}
-
 .calendar-day.holiday {
     background: var(--intuit-sky);
     border-color: #8FC0D4;
@@ -336,11 +319,6 @@ h1 {
 
 .calendar-day.holiday .day-number {
     color: #2B5F7F;
-}
-
-.calendar-day.holiday .today-label {
-    color: #2B5F7F;
-    background: rgba(43, 95, 127, 0.15);
 }
 
 .ai-insights {
@@ -709,11 +687,6 @@ h1 {
         font-size: 12px;
     }
 
-    .today-label {
-        font-size: 6px;
-        padding: 1px 3px;
-    }
-
     .legend {
         gap: 12px;
         flex-wrap: wrap;
@@ -762,10 +735,5 @@ h1 {
 
     .day-number {
         font-size: 11px;
-    }
-
-    .today-label {
-        font-size: 6px;
-        padding: 0px 2px;
     }
 }

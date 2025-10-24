@@ -266,11 +266,8 @@ function renderCalendar() {
                        date.getDate() === todayDate;
         
         if (isToday) {
-            const todayLabel = document.createElement('div');
-            todayLabel.className = 'today-label';
-            todayLabel.textContent = 'Today';
-            dayElement.appendChild(todayLabel);
-            console.log('Today label added for:', dateString);
+            dayElement.classList.add('today');
+            console.log('Today border added for:', dateString);
         }
         
         // Mark future dates
