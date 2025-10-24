@@ -202,7 +202,7 @@ function renderCalendar() {
     
     const dates = getRolling8Weeks();
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    today.setHours(12, 0, 0, 0); // Match the noon time used in calendar dates
     
     // Add day headers (Sun, Mon, Tue, etc.)
     const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
