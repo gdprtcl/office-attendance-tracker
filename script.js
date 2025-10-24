@@ -261,17 +261,6 @@ function renderCalendar() {
             dayElement.classList.add('weekend');
         }
         
-        // Debug for Oct 24
-        if (date.getDate() === 24 && date.getMonth() === 9) { // October is month 9
-            console.log('Oct 24 debug:', {
-                date: date,
-                dateString: dateString,
-                dayOfWeek: date.getDay(),
-                isWeekend: isWeekend(date),
-                fullDate: date.toString()
-            });
-        }
-        
         // Add day number
         const dayNumber = document.createElement('div');
         dayNumber.className = 'day-number';
@@ -285,8 +274,11 @@ function renderCalendar() {
                        date.getDate() === todayDate;
         
         if (isToday) {
-            dayElement.classList.add('today');
-            console.log('Today border added for:', dateString);
+            const todayLabel = document.createElement('div');
+            todayLabel.className = 'today-label';
+            todayLabel.textContent = 'Today';
+            dayElement.appendChild(todayLabel);
+            console.log('Today label added for:', dateString);
         }
         
         // Mark future dates
