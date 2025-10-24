@@ -201,8 +201,16 @@ function renderCalendar() {
     calendar.innerHTML = '';
     
     const dates = getRolling8Weeks();
-    const today = new Date();
-    today.setHours(12, 0, 0, 0); // Match the noon time used in calendar dates
+    
+    // Get today's date in IST timezone
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+    const istTime = new Date(now.getTime() + istOffset);
+    const todayYear = istTime.getUTCFullYear();
+    const todayMonth = istTime.getUTCMonth();
+    const todayDate = istTime.getUTCDate();
+    
+    console.log('Today in IST:', todayYear, todayMonth + 1, todayDate);
     
     // Add day headers (Sun, Mon, Tue, etc.)
     const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -252,13 +260,22 @@ function renderCalendar() {
         
         dayElement.appendChild(dayNumber);
         
-        // Add "Today" indicator or "Future" indicator
-        if (date.getTime() === today.getTime()) {
+        // Add "Today" indicator by comparing date components
+        const isToday = date.getFullYear() === todayYear && 
+                       date.getMonth() === todayMonth && 
+                       date.getDate() === todayDate;
+        
+        if (isToday) {
             const todayLabel = document.createElement('div');
             todayLabel.className = 'today-label';
             todayLabel.textContent = 'Today';
             dayElement.appendChild(todayLabel);
-        } else if (date > today) {
+            console.log('Today label added for:', dateString);
+        }
+        
+        // Mark future dates
+        const checkDate = new Date(todayYear, todayMonth, todayDate);
+        if (date > checkDate) {
             dayElement.classList.add('future');
         }
         
